@@ -31,6 +31,8 @@ services:
       # 映射串口设备
       - /dev/ttyTB0:/dev/ttyTB0
       - /dev/ttyTB1:/dev/ttyTB1
+    group_add:
+      - dialout
     volumes:
       # 挂载配置文件（只读）
       - ./config:/app/config:ro
