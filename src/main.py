@@ -132,10 +132,14 @@ class ModbusMQTTBridge:
         
         logger.info(f"Starting polling threads for {len(self.devices)} devices")
         
-        for device in self.devices:
+        for i, device in enumerate(self.devices):
             thread = DevicePoller(device, self.poller, self.publisher, base_topic)
             thread.start()
             self.polling_threads.append(thread)
+            
+            # 为每个线程添加启动延迟，避免同时访问串口
+            if i < len(self.devices) - 1:  # 最后一个不需要延迟
+                time.sleep(0.2)  # 200ms 启动间隔
         
         logger.info(f"✓ Started {len(self.polling_threads)} polling threads")
     

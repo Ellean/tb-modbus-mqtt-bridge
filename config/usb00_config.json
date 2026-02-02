@@ -13,7 +13,7 @@
         "unitId": 2,
         "deviceName": "数字量输入输出设备",
         "deviceType": "数字量输入输出设备",
-        "timeout": 150,
+        "timeout": 200,
         "byteOrder": "BIG",
         "wordOrder": "BIG",
         "retries": true,

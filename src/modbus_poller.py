@@ -17,31 +17,34 @@ class ModbusPoller:
     def __init__(self):
         self.clients: Dict[str, ModbusSerialClient] = {}
         self.locks: Dict[str, threading.Lock] = {}  # 串口访问锁
+        self.client_create_lock = threading.Lock()  # 创建客户端的全局锁
     
     def get_client(self, device: ModbusDevice) -> ModbusSerialClient:
-        """获取或创建 Modbus 客户端"""
+        """获取或创建 Modbus 客户端（线程安全）"""
         key = f"{device.port}_{device.baudrate}_{device.parity}"
         
-        if key not in self.clients:
-            logger.info(f"Creating Modbus client for {device.port} "
-                       f"({device.baudrate}, {device.parity}, {device.stopbits}, {device.bytesize})")
-            
-            client = ModbusSerialClient(
-                port=device.port,
-                baudrate=device.baudrate,
-                parity=device.parity,
-                stopbits=device.stopbits,
-                bytesize=device.bytesize,
-                timeout=device.timeout
-            )
-            
-            if not client.connect():
-                logger.error(f"Failed to connect to {device.port}")
-                return None
-            
-            self.clients[key] = client
-            self.locks[key] = threading.Lock()  # 为每个串口创建锁
-            logger.info(f"Connected to {device.port}")
+        # 使用全局锁保护客户端创建过程，避免重复创建
+        with self.client_create_lock:
+            if key not in self.clients:
+                logger.info(f"Creating Modbus client for {device.port} "
+                           f"({device.baudrate}, {device.parity}, {device.stopbits}, {device.bytesize})")
+                
+                client = ModbusSerialClient(
+                    port=device.port,
+                    baudrate=device.baudrate,
+                    parity=device.parity,
+                    stopbits=device.stopbits,
+                    bytesize=device.bytesize,
+                    timeout=device.timeout
+                )
+                
+                if not client.connect():
+                    logger.error(f"Failed to connect to {device.port}")
+                    return None
+                
+                self.clients[key] = client
+                self.locks[key] = threading.Lock()  # 为每个串口创建锁
+                logger.info(f"Connected to {device.port}")
         
         return self.clients[key]
     
@@ -175,8 +178,8 @@ class ModbusPoller:
                     data[register.tag] = value
                     success_count += 1
                 
-                # 寄存器读取间添加小延迟，避免设备响应不及
-                time.sleep(0.015)  # 15ms延迟
+                # 寄存器读取间添加延迟，避免设备响应不及
+                time.sleep(0.05)  # 50ms延迟，确保设备有足够时间处理
         
         logger.info(f"Polled {device.name}: {success_count}/{len(device.registers)} registers")
         
