@@ -349,6 +349,17 @@ for d in devices:
 
 ## 📝 更新日志
 
+
+### v1.0.1 (2026-02-02)
+- 🛠️ 修复 Mosquitto 镜像版本兼容性
+- 🛠️ docker-compose 命令统一为新版语法
+- 🛠️ requirements.txt 依赖规范化（paho-mqtt/pyserial）
+- 🛠️ 串口设备访问权限优化（group_add 配置）
+- 🛠️ Modbus 设备超时与轮询机制优化
+- 🛠️ 增加串口访问线程锁，提升多设备稳定性
+- 🛠️ 轮询启动错开，提升数据完整性
+- 🛠️ 清理无用设备配置
+
 ### v1.0.0 (2026-02-02)
 - ✅ 初始版本
 - ✅ 支持 ThingsBoard Gateway 配置格式
