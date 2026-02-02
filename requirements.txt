@@ -1,6 +1,6 @@
 # MQTT Client
 paho-mqtt
-pyserial==1.6.1
+pyserial
 
 # Modbus Client
 pymodbus==3.6.3
