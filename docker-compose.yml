@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # MQTT Broker
+  mosquitto:
+    image: eclipse-mosquitto:2.0-alpine
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    networks:
+      - iot-network
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Modbus to MQTT Bridge
+  modbus-mqtt-bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: modbus-mqtt-bridge
+    restart: unless-stopped
+    devices:
+      # 映射串口设备
+      - /dev/ttyTB0:/dev/ttyTB0
+      - /dev/ttyTB1:/dev/ttyTB1
+    volumes:
+      # 挂载配置文件（只读）
+      - ./config:/app/config:ro
+    environment:
+      - CONFIG_DIR=/app/config
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+      - MQTT_BASE_TOPIC=modbus
+      - LOG_LEVEL=INFO
+    depends_on:
+      mosquitto:
+        condition: service_healthy
+    networks:
+      - iot-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  iot-network:
+    driver: bridge
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:

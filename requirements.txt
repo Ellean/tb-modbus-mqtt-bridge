@@ -1,0 +1,7 @@
+# MQTT Client
+paho-mqtt==1.6.1
+
+# Modbus Client
+pymodbus==3.6.3
+
+# 轻量化，无其他依赖

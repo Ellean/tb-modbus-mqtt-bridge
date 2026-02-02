@@ -1,0 +1,103 @@
+{
+  "name": "USB00",
+  "id": "0571bf69-32c4-4cf3-bda4-aa874a9f0c5c",
+  "master": {
+    "slaves": [
+      {
+        "method": "rtu",
+        "baudrate": 9600,
+        "stopbits": 1,
+        "bytesize": 8,
+        "parity": "N",
+        "strict": true,
+        "unitId": 2,
+        "deviceName": "数字量输入输出设备",
+        "deviceType": "数字量输入输出设备",
+        "timeout": 35,
+        "byteOrder": "BIG",
+        "wordOrder": "BIG",
+        "retries": true,
+        "retryOnEmpty": true,
+        "retryOnInvalid": true,
+        "pollPeriod": 500,
+        "connectAttemptTimeMs": 1000,
+        "connectAttemptCount": 10,
+        "waitAfterFailedAttemptsMs": 500,
+        "reportStrategy": {
+          "type": "ON_CHANGE_OR_REPORT_PERIOD",
+          "reportPeriod": 3000
+        },
+        "type": "serial",
+        "attributes": [
+          {
+            "tag": "io_1_state",
+            "type": "16uint",
+            "address": 0,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_2_state",
+            "type": "16uint",
+            "address": 1,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_3_state",
+            "type": "16uint",
+            "address": 2,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_4_state",
+            "type": "16uint",
+            "address": 3,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_5_state",
+            "type": "16uint",
+            "address": 4,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_6_state",
+            "type": "16uint",
+            "address": 5,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_7_state",
+            "type": "16uint",
+            "address": 6,
+            "objectsCount": 1,
+            "functionCode": 4
+          },
+          {
+            "tag": "io_8_state",
+            "type": "16uint",
+            "address": 7,
+            "objectsCount": 1,
+            "functionCode": 4
+          }
+        ],
+        "timeseries": [],
+        "attributeUpdates": [],
+        "rpc": [],
+        "port": "/dev/ttyTB0"
+      }
+    ]
+  },
+  "logLevel": "INFO",
+  "enableRemoteLogging": false,
+  "reportStrategy": {
+    "type": "ON_CHANGE_OR_REPORT_PERIOD",
+    "reportPeriod": 60000
+  },
+  "configVersion": "3.7.7"
+}

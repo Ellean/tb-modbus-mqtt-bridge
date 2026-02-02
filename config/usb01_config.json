@@ -1,0 +1,174 @@
+{
+  "name": "USB01",
+  "id": "f68538e1-0e74-484e-beb0-7faf495745fc",
+  "master": {
+    "slaves": [
+      {
+        "method": "rtu",
+        "baudrate": 9600,
+        "stopbits": 1,
+        "bytesize": 8,
+        "parity": "N",
+        "strict": true,
+        "unitId": 3,
+        "deviceName": "空气质量传感器",
+        "deviceType": "空气质量传感器",
+        "timeout": 35,
+        "byteOrder": "BIG",
+        "wordOrder": "BIG",
+        "retries": true,
+        "retryOnEmpty": true,
+        "retryOnInvalid": true,
+        "pollPeriod": 5000,
+        "connectAttemptTimeMs": 10000,
+        "connectAttemptCount": 5,
+        "waitAfterFailedAttemptsMs": 5000,
+        "type": "serial",
+        "attributes": [],
+        "timeseries": [
+          {
+            "tag": "temp",
+            "type": "16uint",
+            "address": 1,
+            "objectsCount": 1,
+            "functionCode": 3
+          },
+          {
+            "tag": "pm_2.5",
+            "type": "16uint",
+            "address": 8,
+            "objectsCount": 1,
+            "functionCode": 3
+          },
+          {
+            "tag": "humid",
+            "type": "16uint",
+            "address": 2,
+            "objectsCount": 1,
+            "functionCode": 3
+          },
+          {
+            "tag": "NH3",
+            "type": "16uint",
+            "address": 16,
+            "objectsCount": 1,
+            "functionCode": 3
+          }
+        ],
+        "attributeUpdates": [],
+        "rpc": [],
+        "port": "/dev/ttyTB1"
+      },
+      {
+        "method": "rtu",
+        "baudrate": 9600,
+        "stopbits": 1,
+        "bytesize": 8,
+        "parity": "N",
+        "strict": true,
+        "unitId": 4,
+        "deviceName": "单相电表",
+        "deviceType": "单相电表",
+        "timeout": 35,
+        "byteOrder": "BIG",
+        "wordOrder": "BIG",
+        "retries": true,
+        "retryOnEmpty": true,
+        "retryOnInvalid": true,
+        "pollPeriod": 5000,
+        "connectAttemptTimeMs": 10000,
+        "connectAttemptCount": 5,
+        "waitAfterFailedAttemptsMs": 5000,
+        "type": "serial",
+        "attributes": [],
+        "timeseries": [
+          {
+            "tag": "voltage",
+            "type": "16int",
+            "address": 400,
+            "objectsCount": 1,
+            "functionCode": 4,
+            "divider": 10
+          },
+          {
+            "tag": "amp",
+            "type": "16int",
+            "address": 401,
+            "objectsCount": 1,
+            "functionCode": 4,
+            "divider": 1000
+          },
+          {
+            "tag": "watt",
+            "type": "16int",
+            "address": 402,
+            "objectsCount": 1,
+            "functionCode": 4,
+            "divider": 10
+          },
+          {
+            "tag": "frequency",
+            "type": "16int",
+            "address": 404,
+            "objectsCount": 1,
+            "functionCode": 4,
+            "divider": 100
+          },
+          {
+            "tag": "energy",
+            "type": "32int",
+            "address": 405,
+            "objectsCount": 2,
+            "functionCode": 4,
+            "divider": 100
+          }
+        ],
+        "attributeUpdates": [],
+        "rpc": [],
+        "port": "/dev/ttyTB1"
+      },
+      {
+        "method": "rtu",
+        "baudrate": 9600,
+        "stopbits": 1,
+        "bytesize": 8,
+        "parity": "N",
+        "strict": true,
+        "unitId": 1,
+        "deviceName": "水表",
+        "deviceType": "水表",
+        "timeout": 35,
+        "byteOrder": "BIG",
+        "wordOrder": "BIG",
+        "retries": true,
+        "retryOnEmpty": true,
+        "retryOnInvalid": true,
+        "pollPeriod": 5000,
+        "connectAttemptTimeMs": 10000,
+        "connectAttemptCount": 5,
+        "waitAfterFailedAttemptsMs": 5000,
+        "type": "serial",
+        "attributes": [],
+        "timeseries": [
+          {
+            "tag": "total",
+            "type": "32uint",
+            "address": 0,
+            "objectsCount": 2,
+            "functionCode": 3
+          }
+        ],
+        "attributeUpdates": [],
+        "rpc": [],
+        "port": "/dev/ttyTB1"
+      }
+    ]
+  },
+  "logLevel": "INFO",
+  "enableRemoteLogging": false,
+  "reportStrategy": {
+    "type": "ON_CHANGE_OR_REPORT_PERIOD",
+    "reportPeriod": 60000
+  },
+  "configVersion": "3.7.7"
+}

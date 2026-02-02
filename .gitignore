@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env*
+*.venv
+venv/
+build/
+dist/
+.eggs/
+*.egg-info/
+*.egg
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# 环境和依赖
+.env.local
+.env.*.local
+*.sqlite3
+
+# 单元测试
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
+
+# 其他
+*.bak
+*.swp
+*.swo
+
+# 忽略本地配置
+local_settings.py

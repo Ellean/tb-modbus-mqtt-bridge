@@ -1,0 +1,8 @@
+{
+  "broker": "mosquitto",
+  "port": 1883,
+  "username": null,
+  "password": null,
+  "client_id": "modbus-mqtt-bridge",
+  "base_topic": "modbus"
+}
