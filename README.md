@@ -44,7 +44,7 @@
 
 ```
 modbus-mqtt-bridge/
-├── docker-compose.yml      # Docker Compose 配置
+├── docker compose.yml      # Docker Compose 配置
 ├── Dockerfile             # 容器构建文件
 ├── requirements.txt       # Python 依赖
 ├── README.md             
@@ -158,13 +158,13 @@ EOF
 
 ```bash
 # 构建并启动
-docker-compose up -d
+docker compose up -d
 
 # 查看日志
-docker-compose logs -f modbus-mqtt-bridge
+docker compose logs -f modbus-mqtt-bridge
 
 # 查看所有服务状态
-docker-compose ps
+docker compose ps
 ```
 
 ### 3. 测试 MQTT 消息
@@ -189,23 +189,23 @@ mosquitto_sub -h localhost -t "modbus/+/telemetry" -v
 
 ```bash
 # 查看桥接服务日志
-docker-compose logs -f modbus-mqtt-bridge
+docker compose logs -f modbus-mqtt-bridge
 
 # 查看 MQTT broker 日志
-docker-compose logs -f mosquitto
+docker compose logs -f mosquitto
 
 # 查看最近 100 行
-docker-compose logs --tail=100 modbus-mqtt-bridge
+docker compose logs --tail=100 modbus-mqtt-bridge
 ```
 
 ### 健康检查
 
 ```bash
 # 检查服务健康状态
-docker-compose ps
+docker compose ps
 
 # 进入容器检查
-docker-compose exec modbus-mqtt-bridge ps aux
+docker compose exec modbus-mqtt-bridge ps aux
 ```
 
 ## 🔍 故障排查
@@ -227,10 +227,10 @@ sudo chmod 666 /dev/ttyTB0 /dev/ttyTB1
 
 ```bash
 # 检查设备配置
-docker-compose exec modbus-mqtt-bridge cat /app/config/usb00_config.json
+docker compose exec modbus-mqtt-bridge cat /app/config/usb00_config.json
 
 # 测试 Modbus 连接（进入容器）
-docker-compose exec modbus-mqtt-bridge python3 -c "
+docker compose exec modbus-mqtt-bridge python3 -c "
 from pymodbus.client import ModbusSerialClient
 client = ModbusSerialClient(port='/dev/ttyTB0', baudrate=9600, parity='N')
 print('Connected:', client.connect())
@@ -242,24 +242,24 @@ client.close()
 
 ```bash
 # 检查 MQTT broker 状态
-docker-compose exec mosquitto mosquitto_sub -t '$SYS/#' -v -C 10
+docker compose exec mosquitto mosquitto_sub -t '$SYS/#' -v -C 10
 
 # 测试发布
-docker-compose exec mosquitto mosquitto_pub -t "test" -m "hello"
+docker compose exec mosquitto mosquitto_pub -t "test" -m "hello"
 
 # 测试订阅
-docker-compose exec mosquitto mosquitto_sub -t "test" -v
+docker compose exec mosquitto mosquitto_sub -t "test" -v
 ```
 
 ### 4. 查看详细调试日志
 
 ```bash
-# 修改 docker-compose.yml 中的日志级别
+# 修改 docker compose.yml 中的日志级别
 environment:
   - LOG_LEVEL=DEBUG
 
 # 重启服务
-docker-compose restart modbus-mqtt-bridge
+docker compose restart modbus-mqtt-bridge
 ```
 
 ## ⚙️ 高级配置
@@ -278,7 +278,7 @@ docker-compose restart modbus-mqtt-bridge
 ### MQTT 认证
 
 ```yaml
-# docker-compose.yml
+# docker compose.yml
 environment:
   - MQTT_USERNAME=your_username
   - MQTT_PASSWORD=your_password
@@ -290,7 +290,7 @@ allow_anonymous false
 password_file /mosquitto/config/passwd
 
 # 创建密码文件
-docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/config/passwd username
+docker compose exec mosquitto mosquitto_passwd -c /mosquitto/config/passwd username
 ```
 
 ### 数据缩放和转换
