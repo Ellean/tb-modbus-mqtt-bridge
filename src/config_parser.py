@@ -18,9 +18,25 @@ class ModbusRegister:
     divider: float = 1.0
     multiplier: float = 1.0
     
-    def apply_scaling(self, value: float) -> float:
-        """应用缩放因子"""
-        return (value * self.multiplier) / self.divider
+    def needs_scaling(self) -> bool:
+        """检查是否需要应用缩放"""
+        return self.multiplier != 1.0 or self.divider != 1.0
+    
+    def is_integer_type(self) -> bool:
+        """检查是否为整数类型"""
+        return self.data_type in ('uint16', 'int16', 'uint32', 'int32', 'uint64', 'int64')
+    
+    def apply_scaling(self, value):
+        """应用缩放因子，保持整数类型"""
+        if not self.needs_scaling():
+            return value  # 不需要缩放，保持原始类型
+        
+        result = (value * self.multiplier) / self.divider
+        
+        # 如果是整数类型且结果是整数值，返回整数
+        if self.is_integer_type() and result == int(result):
+            return int(result)
+        return result
 
 
 @dataclass

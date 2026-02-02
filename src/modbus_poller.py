@@ -109,7 +109,7 @@ class ModbusPoller:
             # 单个寄存器
             if register.count == 1:
                 if register.data_type == 'uint16':
-                    value = registers[0]
+                    value = int(registers[0])  # 确保是整数类型
                 elif register.data_type == 'int16':
                     value = struct.unpack(f'{byte_order}h', struct.pack(f'{byte_order}H', registers[0]))[0]
                 else:
@@ -152,8 +152,8 @@ class ModbusPoller:
                 logger.warning(f"Unsupported register count: {register.count}")
                 return None
             
-            # 应用缩放
-            return register.apply_scaling(float(value))
+            # 应用缩放（保持数据类型）
+            return register.apply_scaling(value)
         
         except Exception as e:
             logger.error(f"Error decoding registers: {e}", exc_info=True)
