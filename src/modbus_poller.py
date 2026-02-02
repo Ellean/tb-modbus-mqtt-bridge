@@ -97,6 +97,11 @@ class ModbusPoller:
                          device: ModbusDevice) -> Optional[float]:
         """解码寄存器数据"""
         try:
+            # 检查寄存器数据完整性
+            if len(registers) < register.count:
+                logger.warning(f"Incomplete register data: expected {register.count}, got {len(registers)}")
+                return None
+            
             # 确定字节序
             byte_order = '>' if device.byte_order == 'BIG' else '<'
             word_order = device.word_order
@@ -179,7 +184,7 @@ class ModbusPoller:
                     success_count += 1
                 
                 # 寄存器读取间添加延迟，避免设备响应不及
-                time.sleep(0.05)  # 50ms延迟，确保设备有足够时间处理
+                time.sleep(0.08)  # 80ms延迟，给设备更多处理时间
         
         logger.info(f"Polled {device.name}: {success_count}/{len(device.registers)} registers")
         

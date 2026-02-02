@@ -27,17 +27,24 @@ class DevicePoller(threading.Thread):
     """设备轮询线程"""
     
     def __init__(self, device: ModbusDevice, poller: ModbusPoller, 
-                 publisher: MQTTPublisher, base_topic: str):
+                 publisher: MQTTPublisher, base_topic: str, device_index: int = 0):
         super().__init__(daemon=True)
         self.device = device
         self.poller = poller
         self.publisher = publisher
         self.base_topic = base_topic
+        self.device_index = device_index
         self.running = False
         self.name = f"Poller-{device.name}"
     
     def run(self):
         """运行轮询循环"""
+        # 根据设备索引错开启动时间，避免同时访问串口
+        initial_delay = self.device_index * 0.5  # 每个设备间隔500ms
+        if initial_delay > 0:
+            logger.info(f"Thread '{self.device.name}' waiting {initial_delay}s before starting...")
+            time.sleep(initial_delay)
+        
         logger.info(f"Started polling thread for '{self.device.name}' "
                    f"(interval: {self.device.poll_interval}s)")
         self.running = True
@@ -133,13 +140,9 @@ class ModbusMQTTBridge:
         logger.info(f"Starting polling threads for {len(self.devices)} devices")
         
         for i, device in enumerate(self.devices):
-            thread = DevicePoller(device, self.poller, self.publisher, base_topic)
+            thread = DevicePoller(device, self.poller, self.publisher, base_topic, device_index=i)
             thread.start()
             self.polling_threads.append(thread)
-            
-            # 为每个线程添加启动延迟，避免同时访问串口
-            if i < len(self.devices) - 1:  # 最后一个不需要延迟
-                time.sleep(0.2)  # 200ms 启动间隔
         
         logger.info(f"✓ Started {len(self.polling_threads)} polling threads")
     
