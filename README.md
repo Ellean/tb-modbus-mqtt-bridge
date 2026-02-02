@@ -358,7 +358,7 @@ for d in devices:
 
 ## 📄 License
 
-MIT License
+[GPL v3 License](./LICENSE)
 
 ## 🤝 贡献
 
