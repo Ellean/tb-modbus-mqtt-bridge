@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # MQTT Broker
   mosquitto:
-    image: eclipse-mosquitto:2.0-alpine
+    image: eclipse-mosquitto:alpine
     container_name: mosquitto
     restart: unless-stopped
     ports:
