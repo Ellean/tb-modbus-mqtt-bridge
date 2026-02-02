@@ -1,6 +1,8 @@
 """使用 pymodbus 轮询 Modbus 设备"""
 import logging
 import struct
+import threading
+import time
 from typing import Optional, Dict, Any, List
 from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ModbusException
@@ -14,6 +16,7 @@ class ModbusPoller:
     
     def __init__(self):
         self.clients: Dict[str, ModbusSerialClient] = {}
+        self.locks: Dict[str, threading.Lock] = {}  # 串口访问锁
     
     def get_client(self, device: ModbusDevice) -> ModbusSerialClient:
         """获取或创建 Modbus 客户端"""
@@ -37,6 +40,7 @@ class ModbusPoller:
                 return None
             
             self.clients[key] = client
+            self.locks[key] = threading.Lock()  # 为每个串口创建锁
             logger.info(f"Connected to {device.port}")
         
         return self.clients[key]
@@ -159,14 +163,20 @@ class ModbusPoller:
                 'data': {}
             }
         
-        data = {}
-        success_count = 0
-        
-        for register in device.registers:
-            value = self.read_register(client, device, register)
-            if value is not None:
-                data[register.tag] = value
-                success_count += 1
+        # 使用锁保护串口访问，避免多设备并发冲突
+        key = f"{device.port}_{device.baudrate}_{device.parity}"
+        with self.locks[key]:
+            data = {}
+            success_count = 0
+            
+            for register in device.registers:
+                value = self.read_register(client, device, register)
+                if value is not None:
+                    data[register.tag] = value
+                    success_count += 1
+                
+                # 寄存器读取间添加小延迟，避免设备响应不及
+                time.sleep(0.015)  # 15ms延迟
         
         logger.info(f"Polled {device.name}: {success_count}/{len(device.registers)} registers")
         
